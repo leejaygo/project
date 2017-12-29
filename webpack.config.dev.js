@@ -30,9 +30,9 @@ module.exports = {
 	devtool: 'eval',
 	devServer: {
 		hot: false,//热加载
-		historyApiFallback: false,//如果要从任意URL访问开发服务器，请将其设置为true。这是方便的，如果你使用的是HTML5路由器。
+		historyApiFallback: true,//如果要从任意URL访问开发服务器，请将其设置为true。这是方便的，如果你使用的是HTML5路由器。
 		compress: true,//开启gzip压缩
-		// proxy: {}
+		inline: true,
 		host: '0.0.0.0',
 		port: Port
 	},
