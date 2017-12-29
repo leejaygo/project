@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --config ./webpack.config.dev.js"
+    "dev": "webpack-dev-server --inline --history-api-fallback --config ./webpack.config.dev.js"
   },
   "author": "lijiezhou",
   "license": "ISC",
@@ -12,6 +12,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
+    "react-router": "^3.2.0",
     "redux": "^3.7.2",
     "style-loader": "^0.19.1"
   },
