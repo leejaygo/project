@@ -8,9 +8,9 @@ module.exports = {
         app: path.resolve(__dirname, './app/index.jsx')
     },
     output:{
-        filename: '[name].js',
-        path: path.resolve(__dirname, './build/assets'),
-        chunkFilename:'[name].chunk.js?[hash]',
+        filename: '[name].min.js',
+        path: path.resolve(__dirname, './build'),
+        chunkFilename:'[name].[hash].chunk.js',
         publicPath: '/'
     },
     module: {
@@ -38,14 +38,13 @@ module.exports = {
         }),
         //生成html文件并且自动加载相关css,js资源
         new HtmlWebpackPlugin({
-            title: 'locationService',
             template: path.join(__dirname, './app/index.html'),
-            filename: 'build/index.html'
+            filename: 'index.html'
         }),
         //提取代码中公共部分
         new webpack.optimize.CommonsChunkPlugin({
             names: 'common',
-            filename: 'build/[name].js',
+            filename: '[name].js',
             minChunks: 2
         }),
         //css打包到一个文件中

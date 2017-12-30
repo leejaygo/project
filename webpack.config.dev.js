@@ -57,12 +57,12 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			title: 'locationService',
 	      	template: path.join(__dirname, './app/index.html'),
-	      	filename: 'build/index.html'
+	      	filename: 'index.html'
 	    }),
 	    //提取代码中公共部分
 	    new webpack.optimize.CommonsChunkPlugin({
             names: 'common',
-            filename: 'build/[name].js',
+            filename: '[name].js',
             minChunks: 2
         }),
         //css打包到一个文件中
