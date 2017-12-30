@@ -1,10 +1,15 @@
-//import { Router, history, browserHistory } from 'react-router'
 var Router = require('react-router').Router;
-//var Route = require('react-router').Route;
-//var history = require('react-router').history;
 var browserHistory = require('react-router').browserHistory;
 
+require('./common/css/reset.css');
+
 class App extends React.Component {
+    componentWillMount (){
+
+    }
+    componentWillUnmount (){
+
+    }
     render (){
         return [
             <div className="page" key="{new Date().getTime()}">{this.props.children}</div>
@@ -44,10 +49,9 @@ var routeConfig = {
     childRoutes: subChildren
 }
 
-window.onload = function (){
-    ReactDom.render((
-        <Router routes={routeConfig} history={browserHistory}/>),
-        document.getElementById('container')
-    );
-}
+ReactDom.render((
+    <Router routes={routeConfig} history={browserHistory}/>),
+    document.getElementById('container')
+);
+
 

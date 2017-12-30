@@ -1,8 +1,16 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const Port = 8088;
+const proxy = {
+	"/api": {
+		target: '',
+		secure: false,//支持https
+	}
+}
+
 module.exports = {
 	entry: {
 		app: path.resolve(__dirname, './app/index.jsx')
@@ -23,29 +31,47 @@ module.exports = {
 			{
 		        test: /\.css/,
 		        exclude: /node_modules/,
-		        use: ['style-loader','css-loader']
+		        use: ExtractTextPlugin.extract({
+		        	fallback: ["style-loader"],
+          			use: ["css-loader"]
+        		})
       		}
 		]
 	},
 	devtool: 'eval',
 	devServer: {
-		hot: false,//热加载
+		hot: true,//热加载
 		historyApiFallback: true,//如果要从任意URL访问开发服务器，请将其设置为true。这是方便的，如果你使用的是HTML5路由器。
-		compress: true,//开启gzip压缩
+		compress: false,//开启gzip压缩
 		inline: true,
 		host: '0.0.0.0',
 		port: Port
+		//proxy: proxy//配置代理
 	},
 	plugins:[
+		//
+		new webpack.DefinePlugin({
+            NODE_ENV: JSON.stringify("development") 
+        }),
+        //生成html文件并且自动加载相关css,js资源
 		new HtmlWebpackPlugin({
 			title: 'test',
 	      	template: path.join(__dirname, './app/index.html')
 	    }),
+	    //提取代码中公共部分
 	    new webpack.optimize.CommonsChunkPlugin({
             names: ['common'],
             filename: '[name].js',
             minChunks: 2
         }),
+        //css打包到一个文件中
+        new ExtractTextPlugin('[name].css'),
+        //代码压缩
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     }
+        // }),
         new webpack.ProvidePlugin({
            "$": "webpack-zepto",
            'React': 'react',

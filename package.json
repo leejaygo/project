@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --history-api-fallback --config ./webpack.config.dev.js"
+    "dev": "webpack-dev-server --inline --history-api-fallback --hot --config ./webpack.config.dev.js & node mock.js"
   },
   "author": "lijiezhou",
   "license": "ISC",
   "dependencies": {
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
@@ -21,6 +23,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "body-parser": "^1.18.2",
     "cross-env": "^5.1.3",
     "html-webpack-plugin": "^2.29.0",
     "webpack": "^3.10.0",
