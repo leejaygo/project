@@ -55,13 +55,14 @@ module.exports = {
         }),
         //生成html文件并且自动加载相关css,js资源
 		new HtmlWebpackPlugin({
-			title: 'test',
-	      	template: path.join(__dirname, './app/index.html')
+			title: 'locationService',
+	      	template: path.join(__dirname, './app/index.html'),
+	      	filename: 'build/index.html'
 	    }),
 	    //提取代码中公共部分
 	    new webpack.optimize.CommonsChunkPlugin({
-            names: ['common'],
-            filename: '[name].js',
+            names: 'common',
+            filename: 'build/[name].js',
             minChunks: 2
         }),
         //css打包到一个文件中

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --history-api-fallback --hot --config ./webpack.config.dev.js & node mock.js"
+    "dev": "webpack-dev-server --inline --history-api-fallback --hot --config ./webpack.config.dev.js & node mock.js",
+    "build": "webpack --progress --profile --colors --config ./webpack.config.prd.js"
   },
   "author": "lijiezhou",
   "license": "ISC",
