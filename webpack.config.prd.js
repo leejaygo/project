@@ -55,7 +55,7 @@ module.exports = {
         //提取代码中公共部分
         new webpack.optimize.CommonsChunkPlugin({
             names: 'common',
-            filename: '[name].[chunkhush].js',
+            filename: '[name].[chunkhash].js',
             minChunks: 2
         }),
         //css打包到一个文件中
