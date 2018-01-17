@@ -1,16 +1,60 @@
-//import { Router, history, browserHistory } from 'react-router'
-var Router = require('react-router').Router;
-//var Route = require('react-router').Route;
-//var history = require('react-router').history;
-var browserHistory = require('react-router').browserHistory;
+import { Router, browserHistory } from 'react-router';
+
+import { connect, Provider } from "react-redux";
+import { createStore, applyMiddleware, bindActionCreators } from "redux";
+import reducer from './reducer/index.jsx';
+import action from './actions/index.jsx';
+import createSagaMiddleware from 'redux-saga';
+import mySaga from './saga.jsx';
+import PropTypes from 'prop-types';
+
+import './common/css/reset.css';
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    getChildContext() {
+        return {store: this.props};
+    }
+    componentWillMount (){
+
+    }
+    componentWillUnmount (){
+
+    }
     render (){
         return [
             <div className="page" key="{new Date().getTime()}">{this.props.children}</div>
         ]
     }
 }
+
+App.childContextTypes = {
+    store: PropTypes.object
+};
+
+
+
+function mapStateToProps(state) {
+    return {
+        listdata: state.getGonglueData.listdata
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return{
+        actions : bindActionCreators({getGonglueData: action.getGonglueData},dispatch)
+    }
+}
+
+var sagaMiddleware = createSagaMiddleware();
+
+var store = createStore(reducer,applyMiddleware(sagaMiddleware));
+
+App = connect(mapStateToProps,mapDispatchToProps)(App)
+
+sagaMiddleware.run(mySaga)
 
 var subChildren = [
 	{
@@ -44,10 +88,13 @@ var routeConfig = {
     childRoutes: subChildren
 }
 
-window.onload = function (){
-    ReactDom.render((
-        <Router routes={routeConfig} history={browserHistory}/>),
-        document.getElementById('container')
-    );
-}
+
+ReactDom.render((
+    <Provider store={store}>
+    <Router routes={routeConfig} history={browserHistory}/>
+    </Provider>
+    ),
+    document.getElementById('container')
+);
+
 
