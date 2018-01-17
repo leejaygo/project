@@ -5,15 +5,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const Port = 8088;
 const proxy = {
-	"/api": {
-		target: '',
+	"/api/*": {
+		target: 'http://localhost:8091',
 		secure: false,//支持https
 	}
 }
 
 module.exports = {
 	entry: {
-		app: path.resolve(__dirname, './app/index.jsx')
+		app: ['babel-polyfill',path.resolve(__dirname, './app/index.jsx')]
 	},
 	output:{
 		filename: '[name].js',
@@ -35,7 +35,18 @@ module.exports = {
 		        	fallback: ["style-loader"],
           			use: ["css-loader"]
         		})
-      		}
+      		},
+      		{
+		        test: /\.(png|jpg|gif)$/,
+		        use: [
+		          {
+		            loader: 'url-loader',
+		            options: {
+		              	limit: 8192
+		            }
+		          }
+		        ]
+		    }
 		]
 	},
 	devtool: 'eval',
@@ -45,8 +56,8 @@ module.exports = {
 		compress: false,//开启gzip压缩
 		inline: true,
 		host: '0.0.0.0',
-		port: Port
-		//proxy: proxy//配置代理
+		port: Port,
+		proxy: proxy//配置代理
 	},
 	plugins:[
 		//

@@ -1,16 +1,26 @@
+import PropTypes from 'prop-types';
+var List = require('./list.jsx');
 
-class gonglue extends React.Component {
+class Gonglue extends React.Component {
+	constructor(props) {
+        super(props);
+    }
 	componentWillMount (){
 		
 	}
-	componentDidMout (){
-		
+	componentDidMount (){
+		this.context.store.actions.getGonglueData();
 	}
 	render (){
+		var listdata = this.context.store.listdata;
 		return [
-			<div key="{new Date().getTime()}">222</div>	
+			<List actions={this.props.actions} key="{new Date().getTime()}" listdata={listdata}></List>
 		]
 	}
 }
 
-module.exports = gonglue;
+Gonglue.contextTypes = {
+	store: PropTypes.object
+}
+
+module.exports = Gonglue;

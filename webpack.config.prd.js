@@ -8,8 +8,8 @@ module.exports = {
         app: path.resolve(__dirname, './app/index.jsx')
     },
     output:{
-        filename: '[name].min.js',
-        path: path.resolve(__dirname, './build'),
+        filename: '[name].[chunkhash].min.js',
+        path: path.resolve(__dirname, './build/'+new Date().getTime()+'/'),
         chunkFilename:'[name].[hash].chunk.js',
         publicPath: '/'
     },
@@ -27,6 +27,17 @@ module.exports = {
                     fallback: ["style-loader"],
                     use: ["css-loader"]
                 })
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 8192
+                    }
+                  }
+                ]
             }
         ]
     },
@@ -44,11 +55,11 @@ module.exports = {
         //提取代码中公共部分
         new webpack.optimize.CommonsChunkPlugin({
             names: 'common',
-            filename: '[name].js',
+            filename: '[name].[chunkhush].js',
             minChunks: 2
         }),
         //css打包到一个文件中
-        new ExtractTextPlugin('[name].css'),
+        new ExtractTextPlugin('[name].[contenthash].css'),
         //代码压缩
         new webpack.optimize.UglifyJsPlugin({
             compress: {

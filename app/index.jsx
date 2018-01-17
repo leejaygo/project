@@ -1,10 +1,22 @@
-var Router = require('react-router').Router;
-var browserHistory = require('react-router').browserHistory;
+import { Router, browserHistory } from 'react-router';
 
+import { connect, Provider } from "react-redux";
+import { createStore, applyMiddleware, bindActionCreators } from "redux";
+import reducer from './reducer/index.jsx';
+import action from './actions/index.jsx';
+import createSagaMiddleware from 'redux-saga';
+import mySaga from './saga.jsx';
+import PropTypes from 'prop-types';
 
-require('./common/css/reset.css');
+import './common/css/reset.css';
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    getChildContext() {
+        return {store: this.props};
+    }
     componentWillMount (){
 
     }
@@ -17,6 +29,32 @@ class App extends React.Component {
         ]
     }
 }
+
+App.childContextTypes = {
+    store: PropTypes.object
+};
+
+
+
+function mapStateToProps(state) {
+    return {
+        listdata: state.getGonglueData.listdata
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return{
+        actions : bindActionCreators({getGonglueData: action.getGonglueData},dispatch)
+    }
+}
+
+var sagaMiddleware = createSagaMiddleware();
+
+var store = createStore(reducer,applyMiddleware(sagaMiddleware));
+
+App = connect(mapStateToProps,mapDispatchToProps)(App)
+
+sagaMiddleware.run(mySaga)
 
 var subChildren = [
 	{
@@ -50,8 +88,12 @@ var routeConfig = {
     childRoutes: subChildren
 }
 
+
 ReactDom.render((
-    <Router routes={routeConfig} history={browserHistory}/>),
+    <Provider store={store}>
+    <Router routes={routeConfig} history={browserHistory}/>
+    </Provider>
+    ),
     document.getElementById('container')
 );
 
