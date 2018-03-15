@@ -45,7 +45,7 @@ module.exports = {
     plugins:[
         //
         new webpack.DefinePlugin({
-            NODE_ENV: JSON.stringify("production") 
+            'process.env.NODE_ENV': JSON.stringify("production") 
         }),
         //生成html文件并且自动加载相关css,js资源
         new HtmlWebpackPlugin({
