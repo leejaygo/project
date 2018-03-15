@@ -2,14 +2,18 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
+var time  = new Date();
+var  y = time.getFullYear();
+var m = time.getMonth()+1;
+var d = time.getDate();
+var dirna = ''+y+''+m+''+d +'-'+time.getTime();
 module.exports = {
     entry: {
         app: path.resolve(__dirname, './app/index.jsx')
     },
     output:{
         filename: '[name].[chunkhash].min.js',
-        path: path.resolve(__dirname, './build/'+new Date().getTime()+'/'),
+        path: path.resolve(__dirname, './build/'+dirna+'/'),
         chunkFilename:'[name].[hash].chunk.js',
         publicPath: '/'
     },
@@ -55,7 +59,7 @@ module.exports = {
         //提取代码中公共部分
         new webpack.optimize.CommonsChunkPlugin({
             names: 'common',
-            filename: '[name].[chunkhash].js',
+            filename: '[name].[hash].js',
             minChunks: 2
         }),
         //css打包到一个文件中

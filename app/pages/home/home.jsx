@@ -4,6 +4,13 @@ import Marker from './components/mark.jsx';
 
 import './home.css';
 
+const mapConfig = {
+	keywords: ['公共厕所'],
+	radius: 3000,
+	initZoom: 17,
+	city: '蚌埠'
+}
+
 class home extends React.Component{
 	constructor (props){
 		super(props);
@@ -11,49 +18,84 @@ class home extends React.Component{
 			bmap: null,
 			maxZoom: 18,
 			minZoom: 10,
-			bpos: null	
+			bpos: null,
+			searchRes: []
 		}
 	}
 	componentWillMount (){
 		var self = this;
-		this.getPosition();
+		this.getPosition(this.getscript.bind(this));//获取定位信息&&加载百度地图
 		window.initialize = function (){
 			self.bmap = new window.BMap.Map('map',{
 				minZoom: self.state.minZoom,
 				maxZoom: self.state.maxZoom
 			});
+			let pint = mapConfig.city||'上海';
 			if(self.position){
 				var pos = util.gps2bd(self.position.coords.latitude, self.position.coords.longitude);
-
-				self.bmap.centerAndZoom(new window.BMap.Point(pos.lng, pos.lat), 14);
-				self.setState({
-					bmap: self.bmap,
-					bpos: pos
-				});
-			}else{
-				self.state.bmap.centerAndZoom('上海', 14);
+				pint = new window.BMap.Point(pos.lng, pos.lat);
 			}
-			self.state.bmap.addControl(new window.BMap.ScaleControl());
+			
+			self.bmap.centerAndZoom(pint, mapConfig.initZoom);
+			self.setState({
+				bmap: self.bmap,
+				bpos: pos
+			});
 			self.bindEvents();
+
+			self.state.bmap.addControl(new window.BMap.ScaleControl());
 		}
 	}
 	componentDidMount (){
-		//this.getscript();
+		//console.log('22',this.state)
 	}
 	componentWillUpdate (){
-		console.log(this.state)
+		//console.log('11',this.state)
+	}
+	componentDidUpdate (){
+		//console.log('33',this.state)
 	}
 	bindEvents (){
 		var self = this;
-		this.state.bmap.addEventListener('zoomend', function (){
-			console.log(self.state.bmap.getZoom())
+		self.state.bmap.addEventListener('zoomend', function (){
+			//self.localSearch();
 		});
+		self.state.bmap.addEventListener('dragend', function (){
+			//self.localSearch();
+		});
+		this.state.bmap.addEventListener('tilesloaded',this.tilesloaded.call(self))
+	}
+	tilesloaded () {
+		var self = this;
+		self.localsch = new window.BMap.LocalSearch(mapConfig.city||'上海',{
+			onSearchComplete: function (res){
+				console.log(res)
+				self.setState({searchRes: res});
+			}
+		});
+		self.localSearch();
+		self.state.bmap.removeEventListener('tilesloaded', self.tilesloaded);
+	}
+	localSearch (){
+		var self = this;
+		self.localsch.searchNearby(mapConfig.keywords, self.state.bmap.getCenter(),mapConfig.radius);
+	}
+	location2myPoint (){
+		this.getPosition();
 	}
 	render () {
-		console.log(this.state.bpos)
+		var self=this;
         return [
-            <div className="map" id="map" ref="map" key="{new Date().getTime()}">
-            	<Marker pos={this.state.bpos} map={this.state.bmap} type='location'></Marker>
+        	<div key="outwrap" className="outwtap">
+	            <div className="map" id="map" ref="map" key="map">
+	            	<Marker pos={this.state.bpos} map={this.state.bmap} type='location'></Marker>
+	            	{
+	                    this.state.searchRes.map(function(val,index){
+	                        return [<Marker key={index.toString()} map={self.state.bmap} type="markwc" pos={val.center} />]
+	                    })
+	                }
+	            </div>
+	            <i className="locationpos" key="locationpos" onClick={this.location2myPoint.bind(this)}></i>
             </div>
         ]
     }
@@ -63,12 +105,16 @@ class home extends React.Component{
 		script.src = config.baiduApi;
 		document.body.appendChild(script);
 	}
-    getPosition (){
+    getPosition (cb){
     	var self=this;
     	if(navigator.geolocation){
     		navigator.geolocation.getCurrentPosition(function (pos){
     			self.position = pos;
-    			self.getscript();
+    			if(cb){
+    				self.getscript();
+    			}else{
+    				self.setState({bpos: pos});
+    			}
     		},function (error){
     			switch(error.code)
 			    {
