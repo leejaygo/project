@@ -5,7 +5,7 @@ var path = require('path');
 
 var app = express();
 
-app.get('/tonghuashun',function (req, res){
+app.get('/home',function (req, res){
 	res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
