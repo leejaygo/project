@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --history-api-fallback --hot --config ./webpack.config.dev.js & node mock.js",
     "build": "cross-env NODE_ENV=production webpack --progress --profile --colors --config ./webpack.config.prd.js",
-    "start": "cross-env NODE_ENV=production node server"
+    "start": "cross-env NODE_ENV=production node server",
+    "pm2": "cross-env NODE_ENV=production pm2 start server.js"
   },
   "author": "lijiezhou",
   "license": "ISC",
