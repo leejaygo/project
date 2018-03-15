@@ -2,18 +2,14 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-var time  = new Date();
-var  y = time.getFullYear();
-var m = time.getMonth()+1;
-var d = time.getDate();
-var dirna = ''+y+''+m+''+d +'-'+time.getTime();
+
 module.exports = {
     entry: {
         app: path.resolve(__dirname, './app/index.jsx')
     },
     output:{
         filename: '[name].[chunkhash].min.js',
-        path: path.resolve(__dirname, './build/'+dirna+'/'),
+        path: path.resolve(__dirname, './build/'),
         chunkFilename:'[name].[hash].chunk.js',
         publicPath: '/'
     },
